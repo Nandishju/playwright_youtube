@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playwright File Upload and Download Demo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    section {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    button {
+      padding: 10px 16px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    #uploadStatus {
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Playwright File Handling Demo</h1>
+
+  <section>
+    <h2>File Upload</h2>
+
+    <p>Select a PDF or PNG file to upload.</p>
+
+    <input
+      type="file"
+      id="fileInput"
+      accept=".pdf,.png"
+    />
+
+    <p id="uploadStatus" role="status">
+      No file selected
+    </p>
+  </section>
+
+  <section>
+    <h2>File Download</h2>
+
+    <p>Download a sample text file for testing.</p>
+
+    <button id="downloadBtn" type="button">
+      Download Sample File
+    </button>
+  </section>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const uploadStatus = document.getElementById("uploadStatus");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    // File Upload
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+
+      if (!file) {
+        uploadStatus.textContent = "No file selected";
+        return;
+      }
+
+      const allowedTypes = [
+        "application/pdf",
+        "image/png"
+      ];
+
+      if (!allowedTypes.includes(file.type)) {
+        uploadStatus.textContent = "Unsupported file type";
+        return;
+      }
+
+      uploadStatus.textContent = `Selected file: ${file.name}`;
+    });
+
+    // File Download
+    downloadBtn.addEventListener("click", () => {
+      const content = "Hello! This is a sample downloaded file.";
+      const blob = new Blob([content], {
+        type: "text/plain"
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "sample.txt";
+      link.click();
+
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
